@@ -55,7 +55,7 @@ void Widget::paintEvent(QPaintEvent *event)
     //绘制屏幕背景
 
     painter.setBrush(brush);
-    painter.drawRect(QRect(0,0,310,270));
+    painter.drawRect(QRect(0,0,310,300));
 
     painter.setRenderHint(QPainter::Antialiasing, true);
     // 设置画笔颜色、宽度
@@ -247,13 +247,8 @@ QPointF Widget::x_notin_block()
     int cx;
     int cy;
     while(true){
-<<<<<<< HEAD
         cx = (qrand()%(200/20)*20)+10;
         cy = (qrand()%(200/20)*20)+10;
-=======
-        cx = (qrand()%(270/20)*20)+10;
-        cy = (qrand()%(270/20)*20)+10;
->>>>>>> 72dfa4d273bb020e5973a1a1712d0d2cd7205b93
         for(int i=0;i<mapRect.length();i++){
             if(mapRect.at(i).left()==cx&&mapRect.at(i).top()==cy){
                 flag = true;
