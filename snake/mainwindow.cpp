@@ -31,8 +31,8 @@ MainWindow::MainWindow(QWidget *parent) :
         if(continueBtn==NULL){
 
             continueBtn = new QPushButton("继续游戏",this);
-            continueBtn->resize(93,28);
-            continueBtn->move(350,150);
+            continueBtn->resize(50,20);
+            continueBtn->move(250,150);
         }
         //读取文件，封装数据
         QFile file("game.data");

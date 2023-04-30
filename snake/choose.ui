@@ -38,7 +38,11 @@
     </rect>
    </property>
    <property name="text">
+<<<<<<< HEAD
     <string>Map:</string>
+=======
+    <string>select map：</string>
+>>>>>>> 72dfa4d273bb020e5973a1a1712d0d2cd7205b93
    </property>
   </widget>
   <widget class="QLabel" name="label_2">
@@ -51,7 +55,11 @@
     </rect>
    </property>
    <property name="text">
+<<<<<<< HEAD
     <string>Level:</string>
+=======
+    <string>level：</string>
+>>>>>>> 72dfa4d273bb020e5973a1a1712d0d2cd7205b93
    </property>
   </widget>
   <widget class="QGroupBox" name="groupBox">
@@ -144,7 +152,11 @@
      </rect>
     </property>
     <property name="text">
+<<<<<<< HEAD
      <string>medium</string>
+=======
+     <string>moderate</string>
+>>>>>>> 72dfa4d273bb020e5973a1a1712d0d2cd7205b93
     </property>
    </widget>
    <widget class="QRadioButton" name="hardRb">
@@ -157,7 +169,11 @@
      </rect>
     </property>
     <property name="text">
+<<<<<<< HEAD
      <string>hard</string>
+=======
+     <string>difficult</string>
+>>>>>>> 72dfa4d273bb020e5973a1a1712d0d2cd7205b93
     </property>
    </widget>
   </widget>
@@ -184,7 +200,11 @@
     </rect>
    </property>
    <property name="text">
+<<<<<<< HEAD
     <string>back</string>
+=======
+    <string>return</string>
+>>>>>>> 72dfa4d273bb020e5973a1a1712d0d2cd7205b93
    </property>
   </widget>
  </widget>
