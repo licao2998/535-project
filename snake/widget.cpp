@@ -36,6 +36,8 @@ Widget::Widget(QWidget *parent) :
     QPointF point = x_notin_block();
     rewardNode.append(QRectF(point.x(),point.y(),snakeNodeWidth,snakeNodeWidth));
 
+    QPointF point2 = x_notin_block();
+    rewardNode.append(QRectF(point2.x(),point2.y(),snakeNodeWidth,snakeNodeWidth));
 
     timer = new QTimer(this);
     connect(timer,&QTimer::timeout,this,&Widget::timeOut);
@@ -157,7 +159,7 @@ void Widget::deleteLastRectF()
     snake.removeLast();
 }
 
-
+/*
 //Move the snake
 void Widget::timeOut()
 {
@@ -203,13 +205,76 @@ void Widget::timeOut()
     }
 
     update();
+}*/
+
+
+void Widget::timeOut()
+{
+
+bool foodEaten = false;
+int foodIndex = -1;
+for (int i = 0; i < rewardNode.length(); i++) {
+    if (rewardNode.at(i).contains(snake.at(0).topLeft() + QPointF(snakeNodeWidth / 2, snakeNodeHeight / 2))) {
+        foodEaten = true;
+        foodIndex = i;
+        break;
+    }
 }
+
+if (foodEaten) {
+    addscore();
+    rewardNode.removeAt(foodIndex);
+    rewardTimeOut();
+    switch (moveFlage) {
+        case Up:
+            addTopRectF();
+            break;
+        case Down:
+            addDownRectF();
+            break;
+        case Right:
+            addRightRectF();
+            break;
+        case Left:
+            addLeftRectF();
+            break;
+        default:
+            break;
+    }
+} else {
+    switch (moveFlage) {
+        case Up:
+            addTopRectF();
+            break;
+        case Down:
+            addDownRectF();
+            break;
+        case Right:
+            addRightRectF();
+            break;
+        case Left:
+            addLeftRectF();
+            break;
+        default:
+            break;
+    }
+    deleteLastRectF();
+}
+while (rewardNode.length() < 2) {
+        QPointF point = x_notin_block();
+        rewardNode.append(QRectF(point.x(), point.y(), snakeNodeWidth, snakeNodeWidth));
+    }
+update();
+}
+
 
 void Widget::rewardTimeOut()
 {
-    QPointF point = x_notin_block();
 
-    rewardNode.append(QRectF(point.x(),point.y(),snakeNodeWidth,snakeNodeWidth));
+    while (rewardNode.length() < 2) {
+        QPointF point = x_notin_block();
+        rewardNode.append(QRectF(point.x(), point.y(), snakeNodeWidth, snakeNodeWidth));
+    }
 }
 
 
@@ -270,12 +335,23 @@ QPointF Widget::x_notin_block()
             flag = false;
             continue;
         }
+        for(int i=0;i<rewardNode.length();i++){
+            if(rewardNode.at(i).left()==cx&&rewardNode.at(i).top()==cy){
+                flag = true;
+                break;
+            }
+        }
+        if(flag){
+            flag = false;
+            continue;
+        }
         if(!flag){
             break;
         }
     }
     return QPoint(cx,cy);
 }
+
 bool Widget::snake_notin_wall()
 {
     for(int i=0;i<mapRect.length();i++)
@@ -431,6 +507,7 @@ void Widget::savedata()
     QJsonObject foodobj;
     if(rewardNode.size()==0){
         QPointF pointf = x_notin_block();
+
         foodobj.insert("x",pointf.x());
         foodobj.insert("y",pointf.y());
     }else {
