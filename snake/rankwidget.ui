@@ -41,7 +41,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>确定</string>
+    <string>OK</string>
    </property>
   </widget>
  </widget>

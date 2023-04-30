@@ -8,21 +8,21 @@ RankWidget::RankWidget(QWidget *parent) :
     ui(new Ui::RankWidget)
 {
     ui->setupUi(this);
-    this->move(190,90);
-    //设置模态窗口属性
+    this->move(100,50);
+    //Set modal window properties
     setWindowFlags(Qt::FramelessWindowHint | Qt::Dialog);
     setWindowModality(Qt::WindowModal);
 
     connect(ui->pushButton,&QPushButton::clicked,this,&QWidget::close);
 
-    //TODO 读取文件，封装数据
+    //Read files, encapsulate data
     QFile file("rank.data");
     QTreeWidget *treeWidget = ui->treeWidget;
-    treeWidget->setHeaderLabels(QStringList()<<"排名"<<"分数");
+    treeWidget->setHeaderLabels(QStringList()<<"rank"<<"score");
     if(file.exists()){
         if(!file.open(QIODevice::ReadWrite))
         {
-           qDebug() << "write json file failed1";
+           qDebug() << "write json file failed2";
         }
 
         QString scorestr(file.readAll());

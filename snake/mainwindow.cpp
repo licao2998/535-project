@@ -14,27 +14,27 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    //设置背景为黑色
-    QPalette palette;
-    setAutoFillBackground(true);
-    palette.setColor(QPalette::Background, Qt::black);
+    //Set Background
+    QPixmap pixmap = QPixmap(":/grass.jpg").scaled(this->size());
+    QPalette palette(this->palette());
+    palette.setBrush(QPalette::Background, QBrush(pixmap));
     this->setPalette(palette);
 
 
-    //TODO 根据是否存在文件game.data，动态添加"继续游戏"按钮
+    //Dynamically add a "continue game" button depending on the existence of the file game.data
     QFile file("game.data");
     if(file.exists()){
 
 
         snakelist.clear();
-        //添加"继续游戏"按钮
+        //Add "continue" button
         if(continueBtn==NULL){
 
-            continueBtn = new QPushButton("继续游戏",this);
+            continueBtn = new QPushButton("CONTINUE",this);
             continueBtn->resize(93,28);
-            continueBtn->move(350,150);
+            continueBtn->move(200,60);
         }
-        //读取文件，封装数据
+        //Read files, encapsulate data
         QFile file("game.data");
         if(!file.open(QIODevice::ReadOnly))
         {
@@ -45,7 +45,7 @@ MainWindow::MainWindow(QWidget *parent) :
         QJsonDocument jsonDoc = QJsonDocument::fromJson(ba, &e);
         QJsonArray jsonarry = jsonDoc.array();
 
-        //封装蛇
+        //Encapsulate snake
         for(int i=0;i<jsonarry.size()-5;i++){
 
             int cx = jsonarry.at(i).toObject().value("x").toInt();
@@ -53,18 +53,18 @@ MainWindow::MainWindow(QWidget *parent) :
             QRectF rec(cx,cy,10,10);
             snakelist.append(rec);
         }
-        //封装难度等级
+        //Encapsulate difficulty level
         level = QString::number(jsonarry.at(jsonarry.size()-5).toObject().value("level").toInt());
-        //封装方向
+        //Encapsulate directions
         dir = QString::number(jsonarry.at(jsonarry.size()-4).toObject().value("dir").toInt());
 
-        //封装食物
+        //Encapsulate food
         foodP.setX(jsonarry.at(jsonarry.size()-3).toObject().value("x").toInt());
         foodP.setY(jsonarry.at(jsonarry.size()-3).toObject().value("y").toInt());
 
-        //封装地图
+        //Encapsulate map
          mapstr = QString(jsonarry.at(jsonarry.size()-2).toObject().value("map").toString());
-        //封装得分
+        //Encapsulate score
         score = jsonarry.at(jsonarry.size()-1).toObject().value("score").toInt();
 
         if(!connFlag){
@@ -126,18 +126,18 @@ void MainWindow::deletBtn()
 void MainWindow::save_rank()
 {
 
-    //读取文件
+    //Read files
     QFile rankfile("rank.data");
     QFile gamefile("game.data");
     if(!gamefile.exists()){
-        //game.data不存在
+        //if game.data does not exist
 
         //
     }else if(!rankfile.exists()){
-        //game.data存在,rank.data不存在
+        //game.data exists,rank.data does not exist
         int scorearr[1];
         scorearr[0]=score;
-//      写入数据
+        //Write to data
         if(!rankfile.open(QIODevice::WriteOnly))
         {
            qDebug() << "write json file failed3";
@@ -148,7 +148,7 @@ void MainWindow::save_rank()
 
 
     }else{
-        //game.data存在,rank.data存在
+        //game.data exists,rank.data exists
         if(!rankfile.open(QIODevice::ReadWrite))
         {
            qDebug() << "write json file failed1";
@@ -163,12 +163,12 @@ void MainWindow::save_rank()
         }
 
         rankfile.close();
-        //排序
+        //Sorting
         std::sort(scorearr,scorearr+strlist.size(),[](int a, int b){ return a>b;});
 
-        //清空文件内容
+        //Empty the file contents
         rankfile.resize(0);
-//      写入数据
+        //Write to data
         if(!rankfile.open(QIODevice::WriteOnly))
         {
            qDebug() << "write json file failed3";

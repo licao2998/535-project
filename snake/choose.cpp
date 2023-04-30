@@ -24,11 +24,11 @@ choose::choose(QWidget *parent) :
         mianwidget->close();
         setmapstr();
         setlevel();
-        //创建游戏页面
+        //Create a game page
         playwidget = new Widget;
-        //设置地图
+        //Set Map
         playwidget->setMap(mapstr);
-        //设置难度
+        //Set the difficulty
         playwidget->setLevel(level);
         playwidget->show();
         this->close();

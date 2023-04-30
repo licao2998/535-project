@@ -32,7 +32,7 @@ Widget::Widget(QWidget *parent) :
     snake.append(QRectF(100,50,snakeNodeWidth,snakeNodeHeight));
     addRightRectF();
     addRightRectF();
-    //首先生成一个食物
+    //Generate a food
     QPointF point = x_notin_block();
     rewardNode.append(QRectF(point.x(),point.y(),snakeNodeWidth,snakeNodeWidth));
 
@@ -43,27 +43,28 @@ Widget::Widget(QWidget *parent) :
     init_btn_connect();
 
 }
-//绘图
+//Plotting
 void Widget::paintEvent(QPaintEvent *event)
 {
 
     QPainter painter(this);
     QPen pen;
-    QBrush brush(Qt::black);
+    QBrush brush(Qt::darkGreen);
 
 
-    //绘制屏幕背景
+    //Draw screen background
 
     painter.setBrush(brush);
-    painter.drawRect(QRect(0,0,310,300));
-
+    QPixmap pix;
+    pix.load(":/background.png");
+    painter.drawPixmap(0,0,310,300,pix);
     painter.setRenderHint(QPainter::Antialiasing, true);
-    // 设置画笔颜色、宽度
+    //Set pen color, width
     painter.setPen(QPen(QColor(180, 211, 200,100), 3));
-    // 设置画刷颜色
+    //Set the brush color
     painter.setBrush(QColor(150, 150, 150));
 
-    //绘制墙体
+    //Draw the walls
     for(int i=0; i<mapRect.length(); i++){
         painter.drawRect(mapRect.at(i));
     }
@@ -73,12 +74,12 @@ void Widget::paintEvent(QPaintEvent *event)
     brush.setStyle(Qt::SolidPattern);
     painter.setBrush(brush);
     painter.setPen(pen);
-    //绘制蛇
+    //Draw the snake
     for(int i=0; i<snake.size(); i++){
         painter.drawRect(snake.at(i));
     }
     brush.setColor(Qt::red);
-    //绘制食物
+    //Draw the food
     painter.setBrush(brush);
     for(int i=0; i<rewardNode.length(); i++){
         painter.drawEllipse(rewardNode.at(i));
@@ -86,22 +87,22 @@ void Widget::paintEvent(QPaintEvent *event)
 
 
 
-    //TODO判断地图、蛇是否重叠
+    //Check if map and snake overlap
     if(!snake_notin_wall() && !flags ){
         flags = true;
         timer->stop();
         gameOver = true;
-        //TODO 游戏结束，保存数据，弹出提示框，返回主界面
+        //Game over
         infow = new InfoWidget(this);
         infow->show();
 
     }
-    //判断蛇是否吃到自己
+    //Check whether a snake has eaten itself
     if(snakeStrike() && !flags){
         flags = true;
         timer->stop();
         gameOver = true;
-        //TODO 游戏结束，保存数据，弹出提示框，返回主界面
+        //Game over
         infow = new InfoWidget(this);
         infow->show();
     }
@@ -110,7 +111,7 @@ void Widget::paintEvent(QPaintEvent *event)
 }
 
 
-//向上移动
+//Move up
 void Widget::addTopRectF()
 {
     if(snake.at(0).y()-snakeNodeHeight < 0){
@@ -120,7 +121,7 @@ void Widget::addTopRectF()
         snake.insert(0,QRectF(snake.at(0).topLeft()+QPointF(0,-snakeNodeHeight),snake.at(0).topRight()));
     }
 }
-//向下移动
+//Move down
 void Widget::addDownRectF()
 {
     if(snake.at(0).y()+snakeNodeHeight*2 > this->height()){
@@ -130,7 +131,7 @@ void Widget::addDownRectF()
         snake.insert(0,QRectF(snake.at(0).bottomLeft(),snake.at(0).bottomRight()+QPointF(0,snakeNodeHeight)));
     }
 }
-//向左移动
+//Move left
 void Widget::addLeftRectF()
 {
     if(snake.at(0).x()-snakeNodeWidth < 0){
@@ -140,7 +141,7 @@ void Widget::addLeftRectF()
         snake.insert(0,QRectF(snake.at(0).topLeft()+QPointF(-snakeNodeWidth,0),snake.at(0).bottomLeft()));
     }
 }
-//向右移动
+//Move right
 void Widget::addRightRectF()
 {
     if(snake.at(0).x()+snakeNodeWidth*2 > this->width()){
@@ -150,14 +151,14 @@ void Widget::addRightRectF()
         snake.insert(0,QRectF(snake.at(0).topRight(),snake.at(0).bottomRight()+QPointF(snakeNodeWidth,0)));
     }
 }
-//删除结尾数据
+//Delete ending data
 void Widget::deleteLastRectF()
 {
     snake.removeLast();
 }
 
 
-//移动蛇
+//Move the snake
 void Widget::timeOut()
 {
     if(rewardNode.at(0).contains(snake.at(0).topLeft()+QPointF(snakeNodeWidth/2,snakeNodeHeight/2))){
@@ -296,100 +297,97 @@ void Widget::addscore()
 
 void Widget::init_btn_connect()
 {
-    //退出
+    //Exit
     connect(ui->exit_btn,&QPushButton::clicked,this,[=](){
         if(gameStart){
             if(gameOver){
                 timer->stop();
                 save_rank_data();
-                //不保存游戏数据,删除文件game.data
+                //Do not save the game data, delete the file game.data
                 if(QFile::exists("./game.data")){
                     QFile::remove("./game.data");
                 }
             }else {
                 timer->stop();
                 gameOver = true;
-                //保存游戏数据
+                //Save game data
                 savedata();
             }
         }else {
-            //保存游戏数据
+            //Save game data
             savedata();
 
         }
-//        mainwidget->close();
         this->close();
 
     });
 
-    //返回主界面
+    //Back to the mainwindow
     connect(ui->save_exit_btn,&QPushButton::clicked,this,[=](){
         if(gameStart){
             if(gameOver){
                 timer->stop();
                 save_rank_data();
                 qDebug()<<"befor delete btn"<<endl;
-                //不保存游戏数据,删除文件game.data
+                //Do not save the game data, delete the file game.data
                 if(QFile::exists("./game.data")){
                     qDebug()<<"befor remove file"<<endl;
                     QFile::remove("./game.data");
                 }
-//                mainwidget->deletBtn();
                 qDebug()<<"delete btn"<<endl;
             }else {
                 timer->stop();
                 gameOver = true;
-                //保存游戏数据
+                //Save game data
                 savedata();
             }
         }else {
 
-            //保存游戏数据
+            //Save game data
             savedata();
 
         }
 
         mainwidget = new MainWindow;
         mainwidget->show();
-//        mainwidget->reload();
         this->close();
 
     });
 
-    //点击向上按钮
+    //Click the up button
     connect(ui->up_btn,&QPushButton::clicked,this,[=](){
         if(moveFlage != Down&&!gameOver){
             moveFlage = Up;
         }
     });
-    //点击向下按钮
+    //Click the down button
     connect(ui->down_btn,&QPushButton::clicked,this,[=](){
         if(moveFlage != Up&&!gameOver){
             moveFlage = Down;
         }
     });
-    //点击向左按钮
+    //Click the left button
     connect(ui->left_btn,&QPushButton::clicked,this,[=](){
         if(moveFlage != Right&&!gameOver){
             moveFlage = Left;
         }
     });
-    //点击向右按钮
+    //Click the right button
     connect(ui->right_btn,&QPushButton::clicked,this,[=](){
         if(moveFlage != Left&&!gameOver){
             moveFlage = Right;
         }
     });
-    //点击暂停按钮
+    //Click the pause button
     connect(ui->stop_btn,&QPushButton::clicked,this,[=](){
         if(gameStart && !gameOver){
             timer->stop();
             gameStart = false;
-            ui->stop_btn->setText("开始");
+            ui->stop_btn->setText("start");
         }else if(!gameStart && !gameOver){
             timer->start(time);
             gameStart = true;
-            ui->stop_btn->setText("暂停");
+            ui->stop_btn->setText("stop");
         }
     });
 
@@ -415,7 +413,7 @@ void Widget::setFood(QPointF point)
 
 
 
-//保存上一次游戏数据
+//Save last game data
 void Widget::savedata()
 {
 
@@ -468,7 +466,7 @@ void Widget::savedata()
     array.push_back(foodobj);
     array.push_back(mapobj);
     array.push_back(scoreobj);
-//    写入文件
+    //Write to data
 
     QJsonDocument jsonDoc(array);
     QByteArray ba = jsonDoc.toJson();
@@ -485,12 +483,12 @@ void Widget::savedata()
 
 void Widget::save_rank_data()
 {
-    //读取文件
+    //Read files
     QFile file("rank.data");
     if(!file.exists()){
         int scorearr[1];
         scorearr[0]=score;
-//      写入数据
+        //Write to data
         if(!file.open(QIODevice::WriteOnly))
         {
            qDebug() << "write json file failed3";
@@ -513,12 +511,12 @@ void Widget::save_rank_data()
         }
 
         file.close();
-        //排序
+        //Sorting
         std::sort(scorearr,scorearr+strlist.size(),[](int a, int b){ return a>b;});
 
-        //清空文件内容
+        //Empty the file contents
         file.resize(0);
-//      写入数据
+        //Write to data
         if(!file.open(QIODevice::WriteOnly))
         {
            qDebug() << "write json file failed3";
@@ -532,7 +530,7 @@ void Widget::save_rank_data()
     }
 }
 
-//设置难度等级
+//Set difficulty level
 void Widget::setLevel(QString levelstr)
 {
 
