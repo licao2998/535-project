@@ -7,7 +7,7 @@ InfoWidget::InfoWidget(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    this->move(230,180);
+    this->move(190,90);
     //设置模态窗口属性
     setWindowFlags(Qt::FramelessWindowHint | Qt::Dialog);
     setWindowModality(Qt::WindowModal);

@@ -67,7 +67,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>积分排名</string>
+     <string>RANK</string>
     </property>
    </widget>
    <widget class="QPushButton" name="endButto">
@@ -80,7 +80,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>退出游戏</string>
+     <string>EXIT</string>
     </property>
    </widget>
    <widget class="QPushButton" name="startButton">
@@ -93,7 +93,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>开始游戏</string>
+     <string>START</string>
     </property>
    </widget>
   </widget>

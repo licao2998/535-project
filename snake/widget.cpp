@@ -247,8 +247,8 @@ QPointF Widget::x_notin_block()
     int cx;
     int cy;
     while(true){
-        cx = (qrand()%(300/20)*20)+10;
-        cy = (qrand()%(300/20)*20)+10;
+        cx = (qrand()%(200/20)*20)+10;
+        cy = (qrand()%(200/20)*20)+10;
         for(int i=0;i<mapRect.length();i++){
             if(mapRect.at(i).left()==cx&&mapRect.at(i).top()==cy){
                 flag = true;

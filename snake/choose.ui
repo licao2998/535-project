@@ -38,7 +38,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>地图选择：</string>
+    <string>Map:</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_2">
@@ -51,7 +51,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>难度选择：</string>
+    <string>Level:</string>
    </property>
   </widget>
   <widget class="QGroupBox" name="groupBox">
@@ -79,7 +79,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>地图1</string>
+     <string>map1</string>
     </property>
    </widget>
    <widget class="QRadioButton" name="map2Rb">
@@ -92,7 +92,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>地图2</string>
+     <string>map2</string>
     </property>
    </widget>
    <widget class="QRadioButton" name="map3Rb">
@@ -105,7 +105,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>地图3</string>
+     <string>map3</string>
     </property>
    </widget>
   </widget>
@@ -131,7 +131,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>简单</string>
+     <string>easy</string>
     </property>
    </widget>
    <widget class="QRadioButton" name="medRb">
@@ -144,7 +144,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>中等</string>
+     <string>medium</string>
     </property>
    </widget>
    <widget class="QRadioButton" name="hardRb">
@@ -157,7 +157,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>困难</string>
+     <string>hard</string>
     </property>
    </widget>
   </widget>
@@ -171,7 +171,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>开始游戏</string>
+    <string>start</string>
    </property>
   </widget>
   <widget class="QPushButton" name="retBtn">
@@ -184,7 +184,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>返回</string>
+    <string>back</string>
    </property>
   </widget>
  </widget>

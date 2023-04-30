@@ -8,7 +8,7 @@ RankWidget::RankWidget(QWidget *parent) :
     ui(new Ui::RankWidget)
 {
     ui->setupUi(this);
-    this->move(250,180);
+    this->move(190,90);
     //设置模态窗口属性
     setWindowFlags(Qt::FramelessWindowHint | Qt::Dialog);
     setWindowModality(Qt::WindowModal);

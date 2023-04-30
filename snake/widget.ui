@@ -35,7 +35,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>返回</string>
+    <string>back</string>
    </property>
   </widget>
   <widget class="QPushButton" name="left_btn">
@@ -48,7 +48,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>左</string>
+    <string>←</string>
    </property>
   </widget>
   <widget class="QPushButton" name="down_btn">
@@ -61,7 +61,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>下</string>
+    <string>↓</string>
    </property>
   </widget>
   <widget class="QPushButton" name="right_btn">
@@ -74,7 +74,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>右</string>
+    <string>→</string>
    </property>
   </widget>
   <widget class="QPushButton" name="up_btn">
@@ -87,7 +87,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>上</string>
+    <string>↑</string>
    </property>
   </widget>
   <widget class="QPushButton" name="exit_btn">
@@ -100,7 +100,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>退出</string>
+    <string>exit</string>
    </property>
   </widget>
   <widget class="QPushButton" name="stop_btn">
@@ -113,7 +113,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>开始</string>
+    <string>start</string>
    </property>
   </widget>
   <widget class="QLabel" name="label">
@@ -126,7 +126,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;得分：&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;score:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
   </widget>
   <widget class="QLabel" name="score_label">
