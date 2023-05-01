@@ -33,9 +33,11 @@ Widget::Widget(QWidget *parent) :
     snakeAI.append(QRectF(200,50,snakeNodeWidth,snakeNodeHeight));
     addRightRectF();
     addRightRectF();
-    ai_addRightRectF();
-    ai_addRightRectF();
-    //Generate a food
+    ai_init_addRightRectF();
+    ai_init_addRightRectF();
+    ai_init_addRightRectF();
+    ai_init_addRightRectF();
+    //Generate food
     QPointF point = x_notin_block();
     rewardNode.append(QRectF(point.x(),point.y(),snakeNodeWidth,snakeNodeWidth));
 
@@ -62,7 +64,7 @@ void Widget::paintEvent(QPaintEvent *event)
     painter.setBrush(brush);
     QPixmap pix;
     pix.load(":/background.png");
-    painter.drawPixmap(0,0,310,300,pix);
+    painter.drawPixmap(0,0,310,280,pix);
     painter.setRenderHint(QPainter::Antialiasing, true);
     //Set pen color, width
     painter.setPen(QPen(QColor(180, 211, 200,100), 3));
@@ -87,10 +89,9 @@ void Widget::paintEvent(QPaintEvent *event)
     brush.setColor(Qt::blue);
     brush.setStyle(Qt::SolidPattern);
     painter.setBrush(brush);
-    for(int i=0; i<snakeAI.size(); i++){
+    for(int i=0; i<5; i++){
         painter.drawRect(snakeAI.at(i));
     }
-
     brush.setColor(Qt::red);
     //Draw the food
     painter.setBrush(brush);
@@ -123,30 +124,59 @@ void Widget::paintEvent(QPaintEvent *event)
     QWidget::paintEvent(event);
 }
 
+//Delete ending data
+void Widget::delete_ai_LastRectF()
+{
+    snakeAI.removeLast();
+}
 
+//Check if SnakeAI has eaten itself
+bool Widget::willAiSnakeCollide(QPointF newPosition) {
+    QRectF newHead = QRectF(newPosition, QSizeF(snakeNodeWidth, snakeNodeHeight));
+
+    for (int i = 1; i < snakeAI.size(); i++) {
+        if (snakeAI.at(i).intersects(newHead)) {
+            return true;
+        }
+    }
+    
+
+    return false;
+}
+
+//SnakeAI move
 void Widget::aiSnake()
 {
-    //change direction randomly
-        if((rand()%100) % 3 == 0){
-
-            //change direction
-            int r = rand()%4;
-
-            if(r==0 && moveFlage != Left){
-                ai_addRightRectF();
-            }
-            else if(r==1 && moveFlage != Right){
-                ai_addLeftRectF();
-            }
-            else if(r==2 && moveFlage != Down){
-                ai_addTopRectF();
-            }
-            else if(r==3 && moveFlage != Up){
-                ai_addDownRectF();
-            }
-
-        }
+    //change direction
+    std::srand(std::time(nullptr));
+    int r = (int)(4.0 * std::rand() / (RAND_MAX + 1.0));
+    if(r==0 && ai_moveFlage != Left) {
+        ai_addRightRectF();
+    } else if(r==1 && ai_moveFlage != Right) {
+        ai_addLeftRectF();
+    } else if(r==2 && ai_moveFlage != Down) {
+        ai_addTopRectF();
+    } else if(r==3 && ai_moveFlage != Up){
+        ai_addDownRectF();
+    }
+           
 }
+
+bool Widget::ifCollide()
+{
+    for(int i=0; i<snakeAI.length(); i++){
+        for(int j=0; j<snake.length(); j++){
+            if(snakeAI.at(i) == snake.at(j)){
+                return true;
+            }
+        }
+    }
+   
+    
+
+    return false;
+}
+
 
 //Move up
 void Widget::addTopRectF()
@@ -189,46 +219,90 @@ void Widget::addRightRectF()
     }
 }
 
-//AI Move up
-void Widget::ai_addTopRectF()
-{
-    if(snakeAI.at(0).y()-snakeNodeHeight < 0){
-        snakeAI.insert(0,QRectF(QPointF(snakeAI.at(0).x(),this->height()-snakeNodeHeight),
-                              QPointF(snakeAI.at(0).x()+snakeNodeWidth,this->height())));
-    }else{
-        snakeAI.insert(0,QRectF(snakeAI.at(0).topLeft()+QPointF(0,-snakeNodeHeight),snakeAI.at(0).topRight()));
+
+bool Widget::nextMoveWillHitMapRect(const QPointF &nextPosition) {
+    QRectF nextRect(nextPosition, QSizeF(snakeNodeWidth, snakeNodeHeight));
+    return !mapRect.contains(nextRect);
+}
+
+// AI Move up
+void Widget::ai_addTopRectF() {
+    QPointF newPosition = snakeAI.at(0).topLeft() + QPointF(0, -snakeNodeHeight);
+    if (!willAiSnakeCollide(newPosition)) {
+    //if (!willAiSnakeCollide(newPosition) && !nextMoveWillHitMapRect(newPosition)) {
+        if (snakeAI.at(0).y() - snakeNodeHeight < 10) {
+		 if (!ai_snake_notin_wall(newPosition)) {
+                     //Do nothing
+		 }
+        } else {
+            snakeAI.insert(0, QRectF(snakeAI.at(0).topLeft() + QPointF(0, -snakeNodeHeight), snakeAI.at(0).topRight()));
+            ai_moveFlage = Up;
+            delete_ai_LastRectF();
+        }
     }
 }
-//AI Move down
-void Widget::ai_addDownRectF()
-{
-    if(snakeAI.at(0).y()+snakeNodeHeight*2 > this->height()){
-        snakeAI.insert(0,QRectF(QPointF(snakeAI.at(0).x(),snakeNodeHeight),
-                              QPointF(snakeAI.at(0).x()+snakeNodeWidth,0)));
-    }else{
-        snakeAI.insert(0,QRectF(snakeAI.at(0).bottomLeft(),snakeAI.at(0).bottomRight()+QPointF(0,snakeNodeHeight)));
+
+// AI Move down
+void Widget::ai_addDownRectF() {
+    QPointF newPosition = snakeAI.at(0).bottomLeft() + QPointF(0, snakeNodeHeight);
+    if (!willAiSnakeCollide(newPosition)) {
+        if (snakeAI.at(0).y() + snakeNodeHeight * 2 > 270) {
+		if (!ai_snake_notin_wall(newPosition)) {
+                    //Do nothing
+		}
+        } else {
+            snakeAI.insert(0, QRectF(snakeAI.at(0).bottomLeft(), snakeAI.at(0).bottomRight() + QPointF(0, snakeNodeHeight)));
+            ai_moveFlage = Down;
+            delete_ai_LastRectF();
+        }
     }
 }
-//AI Move left
-void Widget::ai_addLeftRectF()
-{
-    if(snakeAI.at(0).x()-snakeNodeWidth < 0){
-        snakeAI.insert(0,QRectF(QPointF(310-snakeNodeWidth,snakeAI.at(0).y()),
-                              QPointF(310,snakeAI.at(0).y()+snakeNodeHeight)));
-    }else{
-        snakeAI.insert(0,QRectF(snakeAI.at(0).topLeft()+QPointF(-snakeNodeWidth,0),snakeAI.at(0).bottomLeft()));
+
+// AI Move left
+void Widget::ai_addLeftRectF() {
+    QPointF newPosition = snakeAI.at(0).topLeft() + QPointF(-snakeNodeWidth, 0);
+    if (!willAiSnakeCollide(newPosition)) {
+        if (snakeAI.at(0).x() - snakeNodeWidth < 10) {
+		if (!ai_snake_notin_wall(newPosition)) {
+                    //Do nothing
+		}
+        } else {
+            snakeAI.insert(0, QRectF(snakeAI.at(0).topLeft() + QPointF(-snakeNodeWidth, 0), snakeAI.at(0).bottomLeft()));
+            ai_moveFlage = Left;
+            delete_ai_LastRectF();
+        }
     }
 }
-//AI Move right
-void Widget::ai_addRightRectF()
-{
-    if(snakeAI.at(0).x()+snakeNodeWidth*2 > this->width()){
-        snakeAI.insert(0,QRectF(QPointF(0,snakeAI.at(0).y()),
-                              QPointF(snakeNodeWidth,snakeAI.at(0).y()+snakeNodeHeight)));
-    }else{
-        snakeAI.insert(0,QRectF(snakeAI.at(0).topRight(),snakeAI.at(0).bottomRight()+QPointF(snakeNodeWidth,0)));
+
+// AI Move right
+void Widget::ai_addRightRectF() {
+    QPointF newPosition = snakeAI.at(0).topRight() + QPointF(snakeNodeWidth, 0);
+    if (!willAiSnakeCollide(newPosition)) {
+        if (snakeAI.at(0).x() + snakeNodeWidth * 2 > 300) {
+          if (!ai_snake_notin_wall(newPosition)) {
+              //Do nothing
+          }
+        } else {
+            snakeAI.insert(0, QRectF(snakeAI.at(0).topRight(), snakeAI.at(0).bottomRight() + QPointF(snakeNodeWidth, 0)));
+            delete_ai_LastRectF();
+            ai_moveFlage = Right;
+        }
     }
 }
+
+// AI Move right init
+void Widget::ai_init_addRightRectF() {
+    QPointF newPosition = snakeAI.at(0).topRight() + QPointF(snakeNodeWidth, 0);
+    if (!willAiSnakeCollide(newPosition)) {
+        if (snakeAI.at(0).x() + snakeNodeWidth * 2 > 300) {
+            //Do nothing
+        } else {
+            snakeAI.insert(0, QRectF(snakeAI.at(0).topRight(), snakeAI.at(0).bottomRight() + QPointF(snakeNodeWidth, 0)));
+            ai_moveFlage = Right;
+        }
+    }
+}
+
 
 //Delete ending data
 void Widget::deleteLastRectF()
@@ -240,11 +314,21 @@ void Widget::timeOut()
 {
 
     bool foodEaten = false;
+    bool foodEaten_ai = false;
     int foodIndex = -1;
+    int foodIndex_ai = -1;
     for (int i = 0; i < rewardNode.length(); i++) {
         if (rewardNode.at(i).contains(snake.at(0).topLeft() + QPointF(snakeNodeWidth / 2, snakeNodeHeight / 2))) {
             foodEaten = true;
             foodIndex = i;
+            break;
+        }
+    }
+
+    for (int i = 0; i < rewardNode.length(); i++) {
+        if (rewardNode.at(i).contains(snakeAI.at(0).topLeft() + QPointF(snakeNodeWidth / 2, snakeNodeHeight / 2))) {
+            foodEaten_ai = true;
+            foodIndex_ai = i;
             break;
         }
     }
@@ -288,12 +372,29 @@ void Widget::timeOut()
         }
         deleteLastRectF();
     }
+    if (foodEaten_ai) {
+        //addscore();
+        rewardNode.removeAt(foodIndex_ai);
+        rewardTimeOut();
+        aiSnake();
+    } else {
+        aiSnake();
+    }
 
     while (rewardNode.length() < 2) {
         QPointF point = x_notin_block();
         rewardNode.append(QRectF(point.x(), point.y(), snakeNodeWidth, snakeNodeWidth));
     }
     update();
+    //Collide each other
+    if (ifCollide()) {
+    	//flags = true;
+        timer->stop();
+        gameOver = true;
+        //Game over
+        infow = new InfoWidget(this);
+        infow->show();
+     }
 }
 
 
@@ -327,6 +428,19 @@ bool Widget::snakeStrike()
     for(int i=0; i<snake.length(); i++){
         for(int j=i+1; j<snake.length(); j++){
             if(snake.at(i) == snake.at(j)){
+                return true;
+            }
+        }
+    }
+    return false;
+
+}
+
+bool Widget::ai_snakeStrike()
+{
+    for(int i=0; i<snakeAI.length(); i++){
+        for(int j=i+1; j<snakeAI.length(); j++){
+            if(snakeAI.at(i) == snakeAI.at(j)){
                 return true;
             }
         }
@@ -393,6 +507,19 @@ bool Widget::snake_notin_wall()
     return true;
 }
 
+bool Widget::ai_snake_notin_wall(QPointF newPosition)
+{
+    QRectF newHead = QRectF(newPosition, QSizeF(snakeNodeWidth, snakeNodeHeight));
+    for(int i=0;i<mapRect.length();i++)
+    {
+        if(mapRect.at(i).intersects(newHead)){
+            return false;
+        }
+
+    }
+    return true;
+}
+
 void Widget::addscore()
 {
    score+=5;
@@ -402,44 +529,28 @@ void Widget::addscore()
 
 void Widget::init_btn_connect()
 {
-    //Exit
+
     connect(ui->exit_btn,&QPushButton::clicked,this,[=](){
-        if(gameStart){
-            if(gameOver){
-                timer->stop();
-                save_rank_data();
-                //Do not save the game data, delete the file game.data
-                if(QFile::exists("./game.data")){
-                    QFile::remove("./game.data");
-                }
-            }else {
-                timer->stop();
-                gameOver = true;
-                //Save game data
-                savedata();
-            }
-        }else {
-            //Save game data
-            savedata();
-
+        if(!gameOver){
+            timer->stop();
+            gameOver = true;
+            //Game over
+            infow = new InfoWidget(this);
+            infow->show();
         }
-        this->close();
-
     });
 
-    //Back to the mainwindow
+
+    //Pause and back to the mainwindow
     connect(ui->save_exit_btn,&QPushButton::clicked,this,[=](){
         if(gameStart){
             if(gameOver){
                 timer->stop();
                 save_rank_data();
-                qDebug()<<"befor delete btn"<<endl;
                 //Do not save the game data, delete the file game.data
                 if(QFile::exists("./game.data")){
-                    qDebug()<<"befor remove file"<<endl;
                     QFile::remove("./game.data");
                 }
-                qDebug()<<"delete btn"<<endl;
             }else {
                 timer->stop();
                 gameOver = true;
@@ -447,9 +558,16 @@ void Widget::init_btn_connect()
                 savedata();
             }
         }else {
-
+            if(!gameOver){
             //Save game data
             savedata();
+            }else if(gameOver){
+                timer->stop();
+                save_rank_data();
+                if(QFile::exists("./game.data")){
+                    QFile::remove("./game.data");
+                }
+            }
 
         }
 
@@ -492,7 +610,8 @@ void Widget::init_btn_connect()
         }else if(!gameStart && !gameOver){
             timer->start(time);
             gameStart = true;
-            ui->stop_btn->setText("stop");
+            ui->stop_btn->setText("pause");
+            
         }
     });
 

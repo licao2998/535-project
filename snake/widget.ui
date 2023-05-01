@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>501</width>
-    <height>302</height>
+    <width>500</width>
+    <height>280</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -18,8 +18,8 @@
   </property>
   <property name="maximumSize">
    <size>
-    <width>501</width>
-    <height>302</height>
+    <width>500</width>
+    <height>280</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -41,7 +41,7 @@
     <string notr="true">background-color: rgb(255, 170, 0);</string>
    </property>
    <property name="text">
-    <string>menu</string>
+    <string>back</string>
    </property>
   </widget>
   <widget class="QPushButton" name="left_btn">
@@ -121,7 +121,7 @@
     <string notr="true">background-color: rgb(255, 170, 0);</string>
    </property>
    <property name="text">
-    <string>exit</string>
+    <string>end</string>
    </property>
   </widget>
   <widget class="QPushButton" name="stop_btn">

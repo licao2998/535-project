@@ -25,6 +25,7 @@ public:
     ~Widget();
     int score=0;
     int moveFlage = Right;
+    int ai_moveFlage = Right;
     void paintEvent(QPaintEvent *);
     void setScoreSTr(QString );
     void setSnakeList(QList<QRectF> );
@@ -41,19 +42,26 @@ private:
     void ai_addDownRectF();
     void ai_addLeftRectF();
     void ai_addRightRectF();
+    void ai_init_addRightRectF();
     void addTopRectF();
     void addDownRectF();
     void addLeftRectF();
     void addRightRectF();
     void deleteLastRectF();
     bool snakeStrike();
+    bool ai_snakeStrike();
     bool snake_notin_wall();
+    bool ai_snake_notin_wall(QPointF newPosition);
     void addscore();
     void init_btn_connect();
     QPointF x_notin_block();
     void savedata();
     void save_rank_data();
     void aiSnake();
+    void delete_ai_LastRectF();
+    bool willAiSnakeCollide(QPointF newPosition);
+    bool nextMoveWillHitMapRect(const QPointF &nextPosition);
+    bool ifCollide();
 protected slots:
     void timeOut();
     void rewardTimeOut();

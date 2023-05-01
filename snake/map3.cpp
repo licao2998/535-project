@@ -10,7 +10,7 @@ Map3::Map3(QWidget *parent) :
         mapRect.append(QRectF(i,270,10,10));
     }
     //Left and right walls
-    for(int i=10;i<300;i+=10)
+    for(int i=10;i<280;i+=10)
     {
         mapRect.append(QRectF(0,i,10,10));
         mapRect.append(QRectF(300,i,10,10));
@@ -18,7 +18,7 @@ Map3::Map3(QWidget *parent) :
 
     //Special obstacles
 
-    for(int i=120;i<170;i+=10)
+    for(int i=140;i<170;i+=10)
     {
         mapRect.append(QRectF(i,140,10,10));
 
