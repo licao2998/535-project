@@ -30,8 +30,11 @@ Widget::Widget(QWidget *parent) :
 
     mapRect = Map1(this).mapRect;
     snake.append(QRectF(100,50,snakeNodeWidth,snakeNodeHeight));
+    snakeAI.append(QRectF(200,50,snakeNodeWidth,snakeNodeHeight));
     addRightRectF();
     addRightRectF();
+    ai_addRightRectF();
+    ai_addRightRectF();
     //Generate a food
     QPointF point = x_notin_block();
     rewardNode.append(QRectF(point.x(),point.y(),snakeNodeWidth,snakeNodeWidth));
@@ -80,6 +83,13 @@ void Widget::paintEvent(QPaintEvent *event)
     for(int i=0; i<snake.size(); i++){
         painter.drawRect(snake.at(i));
     }
+    
+    brush.setColor(Qt::blue);
+    brush.setStyle(Qt::SolidPattern);
+    painter.setBrush(brush);
+    for(int i=0; i<snakeAI.size(); i++){
+        painter.drawRect(snakeAI.at(i));
+    }
 
     brush.setColor(Qt::red);
     //Draw the food
@@ -113,6 +123,30 @@ void Widget::paintEvent(QPaintEvent *event)
     QWidget::paintEvent(event);
 }
 
+
+void Widget::aiSnake()
+{
+    //change direction randomly
+        if((rand()%100) % 3 == 0){
+
+            //change direction
+            int r = rand()%4;
+
+            if(r==0 && moveFlage != Left){
+                ai_addRightRectF();
+            }
+            else if(r==1 && moveFlage != Right){
+                ai_addLeftRectF();
+            }
+            else if(r==2 && moveFlage != Down){
+                ai_addTopRectF();
+            }
+            else if(r==3 && moveFlage != Up){
+                ai_addDownRectF();
+            }
+
+        }
+}
 
 //Move up
 void Widget::addTopRectF()
@@ -154,6 +188,48 @@ void Widget::addRightRectF()
         snake.insert(0,QRectF(snake.at(0).topRight(),snake.at(0).bottomRight()+QPointF(snakeNodeWidth,0)));
     }
 }
+
+//AI Move up
+void Widget::ai_addTopRectF()
+{
+    if(snakeAI.at(0).y()-snakeNodeHeight < 0){
+        snakeAI.insert(0,QRectF(QPointF(snakeAI.at(0).x(),this->height()-snakeNodeHeight),
+                              QPointF(snakeAI.at(0).x()+snakeNodeWidth,this->height())));
+    }else{
+        snakeAI.insert(0,QRectF(snakeAI.at(0).topLeft()+QPointF(0,-snakeNodeHeight),snakeAI.at(0).topRight()));
+    }
+}
+//AI Move down
+void Widget::ai_addDownRectF()
+{
+    if(snakeAI.at(0).y()+snakeNodeHeight*2 > this->height()){
+        snakeAI.insert(0,QRectF(QPointF(snakeAI.at(0).x(),snakeNodeHeight),
+                              QPointF(snakeAI.at(0).x()+snakeNodeWidth,0)));
+    }else{
+        snakeAI.insert(0,QRectF(snakeAI.at(0).bottomLeft(),snakeAI.at(0).bottomRight()+QPointF(0,snakeNodeHeight)));
+    }
+}
+//AI Move left
+void Widget::ai_addLeftRectF()
+{
+    if(snakeAI.at(0).x()-snakeNodeWidth < 0){
+        snakeAI.insert(0,QRectF(QPointF(310-snakeNodeWidth,snakeAI.at(0).y()),
+                              QPointF(310,snakeAI.at(0).y()+snakeNodeHeight)));
+    }else{
+        snakeAI.insert(0,QRectF(snakeAI.at(0).topLeft()+QPointF(-snakeNodeWidth,0),snakeAI.at(0).bottomLeft()));
+    }
+}
+//AI Move right
+void Widget::ai_addRightRectF()
+{
+    if(snakeAI.at(0).x()+snakeNodeWidth*2 > this->width()){
+        snakeAI.insert(0,QRectF(QPointF(0,snakeAI.at(0).y()),
+                              QPointF(snakeNodeWidth,snakeAI.at(0).y()+snakeNodeHeight)));
+    }else{
+        snakeAI.insert(0,QRectF(snakeAI.at(0).topRight(),snakeAI.at(0).bottomRight()+QPointF(snakeNodeWidth,0)));
+    }
+}
+
 //Delete ending data
 void Widget::deleteLastRectF()
 {

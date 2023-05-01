@@ -37,6 +37,10 @@ public slots:
     void setMap(QString smap);
 
 private:
+    void ai_addTopRectF();
+    void ai_addDownRectF();
+    void ai_addLeftRectF();
+    void ai_addRightRectF();
     void addTopRectF();
     void addDownRectF();
     void addLeftRectF();
@@ -49,6 +53,7 @@ private:
     QPointF x_notin_block();
     void savedata();
     void save_rank_data();
+    void aiSnake();
 protected slots:
     void timeOut();
     void rewardTimeOut();
@@ -57,7 +62,8 @@ private:
     Ui::Widget *ui;
     InfoWidget * infow;
     MainWindow *mainwidget;
-    QList<QRectF> snake;//贪吃蛇本体
+    QList<QRectF> snake;//snake
+    QList<QRectF> snakeAI;//AI snake
     int snakeNodeWidth = 10;
     int snakeNodeHeight = 10;
     QTimer *timer;
