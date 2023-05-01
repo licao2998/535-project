@@ -80,6 +80,7 @@ void Widget::paintEvent(QPaintEvent *event)
     for(int i=0; i<snake.size(); i++){
         painter.drawRect(snake.at(i));
     }
+
     brush.setColor(Qt::red);
     //Draw the food
     painter.setBrush(brush);
@@ -159,14 +160,22 @@ void Widget::deleteLastRectF()
     snake.removeLast();
 }
 
-/*
-//Move the snake
 void Widget::timeOut()
 {
-    if(rewardNode.at(0).contains(snake.at(0).topLeft()+QPointF(snakeNodeWidth/2,snakeNodeHeight/2))){
 
+    bool foodEaten = false;
+    int foodIndex = -1;
+    for (int i = 0; i < rewardNode.length(); i++) {
+        if (rewardNode.at(i).contains(snake.at(0).topLeft() + QPointF(snakeNodeWidth / 2, snakeNodeHeight / 2))) {
+            foodEaten = true;
+            foodIndex = i;
+            break;
+        }
+    }
+
+    if (foodEaten) {
         addscore();
-        rewardNode.removeAt(0);
+        rewardNode.removeAt(foodIndex);
         rewardTimeOut();
         switch (moveFlage) {
             case Up:
@@ -184,7 +193,7 @@ void Widget::timeOut()
             default:
                 break;
         }
-    }else{
+    } else {
         switch (moveFlage) {
             case Up:
                 addTopRectF();
@@ -200,71 +209,15 @@ void Widget::timeOut()
                 break;
             default:
                 break;
-            }
+        }
         deleteLastRectF();
     }
 
-    update();
-}*/
-
-
-void Widget::timeOut()
-{
-
-bool foodEaten = false;
-int foodIndex = -1;
-for (int i = 0; i < rewardNode.length(); i++) {
-    if (rewardNode.at(i).contains(snake.at(0).topLeft() + QPointF(snakeNodeWidth / 2, snakeNodeHeight / 2))) {
-        foodEaten = true;
-        foodIndex = i;
-        break;
-    }
-}
-
-if (foodEaten) {
-    addscore();
-    rewardNode.removeAt(foodIndex);
-    rewardTimeOut();
-    switch (moveFlage) {
-        case Up:
-            addTopRectF();
-            break;
-        case Down:
-            addDownRectF();
-            break;
-        case Right:
-            addRightRectF();
-            break;
-        case Left:
-            addLeftRectF();
-            break;
-        default:
-            break;
-    }
-} else {
-    switch (moveFlage) {
-        case Up:
-            addTopRectF();
-            break;
-        case Down:
-            addDownRectF();
-            break;
-        case Right:
-            addRightRectF();
-            break;
-        case Left:
-            addLeftRectF();
-            break;
-        default:
-            break;
-    }
-    deleteLastRectF();
-}
-while (rewardNode.length() < 2) {
+    while (rewardNode.length() < 2) {
         QPointF point = x_notin_block();
         rewardNode.append(QRectF(point.x(), point.y(), snakeNodeWidth, snakeNodeWidth));
     }
-update();
+    update();
 }
 
 
