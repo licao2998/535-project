@@ -13,7 +13,7 @@ make
 
 ./snake
 `
-## 2. Devision of Work:  
+## 2. Division of Work:  
 |Function| |
 |---|---|
 |mainwindow setup & buttons setup    |Lixu He|
