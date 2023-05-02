@@ -33,3 +33,6 @@ Licao      - 35%
 
 Lixu He    - 30%
 
+## 4. Github link:
+
+https://github.com/licao2998/535-project
